@@ -1,0 +1,16 @@
+[
+  {
+    "status": "pending",
+    "payee": "string",
+    "nickname": "string",
+    "payment_date": "2016-07-8",
+    "payment_amount": 50
+  },
+  {
+    "status": "pending",
+    "payee": "string",
+    "nickname": "string",
+    "payment_date": "2016-07-8",
+    "payment_amount": 1250
+  }
+]

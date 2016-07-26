@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="theme.css">
+</head>
+
+
+<body>
+<p class="label">Accounts</p>
+<table style="width:450px">
+  <tr id="titleRow">
+    <td>Name</td>
+    <td>Balance</td>
+  </tr>
+  <tr>
+    <td>Savings</td>
+    <td id="savingsBalance"></td>
+  </tr>
+  <tr>
+    <td>Checking</td>
+    <td id="checkingBalance"></td>
+  </tr>
+  <tr>
+    <td> Credit Card</td>
+    <td id="ccBalance"> </td>
+  </tr>
+</table>
+
+
+<p class="label">Bills</p>
+<table id="billTable" style="width:450px">
+  <tr id="titleRow">
+    <td>Due-date</td>
+    <td>Amount</td>
+  </tr>
+</table>
+
+
+<img src="../hackLogo.png" alt="easyButton" width="450px" height="450px">
+
+
+
+<script>
+		function httpGetAccountsAsync(theUrl) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() { 
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                var json = JSON.parse(xmlHttp.responseText);
+                for (entry in json) {
+                  acct = json[entry];
+                  if (acct['type'] == "Credit Card") {
+                    document.getElementById('ccBalance').innerHTML = "$" + acct['balance'];
+                  }
+                  if (acct['type'] == "Checking") {
+                    document.getElementById('checkingBalance').innerHTML = "$" + acct['balance'];
+                  }
+                  if (acct['type'] == "Savings") {
+                    document.getElementById('savingsBalance').innerHTML = "$" + acct['balance'];
+                  }
+                }
+        }
+        xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+        xmlHttp.send(null);
+    }
+
+    function httpGetBillsAsync(theUrl) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() { 
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                var json = JSON.parse(xmlHttp.responseText);
+                for (entry in json) {
+                  bill = json[entry];
+                  var table = document.getElementById('billTable');
+                  var row = table.insertRow(-1);
+                  var cell1 = row.insertCell(0);
+                  var cell2 = row.insertCell(1);
+                  cell2.innerHTML = "$" + bill['payment_amount'];
+                  cell1.innerHTML = bill['payment_date'];
+                }
+        }
+        xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+        xmlHttp.send(null);
+    }
+
+
+    httpGetBillsAsync("http://api.reimaginebanking.com/customers/577d5e520733d0184021f587/bills?key=74680085cf15526dc4a9f1b488a6aa58");
+    httpGetAccountsAsync("http://api.reimaginebanking.com/accounts?key=74680085cf15526dc4a9f1b488a6aa58");
+</script>
+
+</body>
+
+</html>
